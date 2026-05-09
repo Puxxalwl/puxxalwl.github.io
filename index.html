@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>puxalwl bio</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'JetBrains Mono', monospace; background-color: #000; color: white; min-height: 100vh; overflow-x: hidden; position: relative; }
+        #particles-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+        .container { position: relative; min-height: 100vh; width: 100%; display: flex; align-items: center; justify-content: center; z-index: 20; padding: 20px; }
+        .content-wrapper { display: flex; gap: 30px; align-items: stretch; max-width: 1000px; width: 100%; justify-content: center; }
+        .main-content, .bio-player { flex: 1; max-width: 520px; background-color: transparent; padding: 40px 30px; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 16px; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); transition: all 0.3s ease; box-shadow: 0 0 30px rgba(255, 255, 255, 0.1); will-change: transform, box-shadow; transform: translateZ(0); }
+        .main-content { gap: 20px; animation: fadeIn 0.7s ease-out; min-height: 600px; }
+        .main-content::before, .bio-player::before { content: ''; position: absolute; inset: 0; border-radius: 16px; border: 1px solid transparent; background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent) border-box; -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; z-index: -1; }
+        @media (min-width: 1025px) { .main-content:hover, .bio-player:hover { box-shadow: 0 0 50px rgba(255, 255, 255, 0.25); border-color: rgba(255, 255, 255, 0.4); transform: translateY(-3px) translateZ(0); } }
+        @media (max-width: 1024px) { .content-wrapper { flex-direction: column; align-items: center; } .main-content, .bio-player { min-height: auto; padding: 30px 20px; width: 100%; } }
+        .avatar-section { position: relative; }
+        .avatar-link { display: block; text-decoration: none; cursor: pointer; }
+        .avatar-wrapper { width: 96px; height: 96px; border-radius: 50%; overflow: hidden; border: 2px solid white; box-shadow: 0 0 20px rgba(255, 255, 255, 0.4); transition: all 0.5s ease; position: relative; margin: 0 auto; }
+        .avatar-wrapper::after { content: ''; position: absolute; inset: -2px; border-radius: 50%; border: 1px solid transparent; background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3, #54a0ff, #5f27cd); background-size: 400% 400%; -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; opacity: 0; transition: opacity 0.3s ease; animation: gradientRotate 3s linear infinite; }
+        @keyframes gradientRotate { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .avatar { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; position: relative; z-index: 1; }
+        .avatar-link:hover .avatar-wrapper { transform: scale(1.1) rotate(5deg); box-shadow: 0 0 40px rgba(255, 255, 255, 0.8); border-color: white; }
+        .avatar-link:hover .avatar-wrapper::after { opacity: 1; }
+        .avatar-link:hover .avatar { transform: rotate(-5deg); }
+        .info-section { display: flex; flex-direction: column; gap: 5px; }
+        .nickname { font-family: 'VT323', monospace; font-size: 26px; font-weight: bold; text-shadow: 0 0 15px rgba(255, 255, 255, 0.9); letter-spacing: 2px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .description { font-family: 'VT323', monospace; font-size: 16px; color: rgba(255, 255, 255, 0.6); letter-spacing: 3.2px; text-transform: uppercase; }
+        .terminal-box { width: 100%; background: rgba(10, 10, 12, 0.7); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px; overflow: hidden; text-align: left; box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5); margin-top: 10px; }
+        .terminal-header { background: rgba(255, 255, 255, 0.05); padding: 8px 15px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        .term-dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+        .term-title { font-size: 12px; color: rgba(255, 255, 255, 0.5); margin-left: 10px; letter-spacing: 1px; }
+        .terminal-body { padding: 15px; font-size: 13px; line-height: 1.7; display: flex; flex-direction: column; gap: 8px; }
+        .term-row { display: flex; align-items: flex-start; gap: 10px; word-break: break-word; }
+        .term-icon { width: 20px; text-align: center; font-size: 14px; flex-shrink: 0; margin-top: 3px; }
+        .c-blue { color: #54a0ff; text-shadow: 0 0 10px rgba(84, 160, 255, 0.5); }
+        .c-purple { color: #a29bfe; text-shadow: 0 0 10px rgba(162, 155, 254, 0.5); }
+        .c-green { color: #00b894; text-shadow: 0 0 10px rgba(0, 184, 148, 0.5); }
+        .c-orange { color: #e17055; text-shadow: 0 0 10px rgba(225, 112, 85, 0.5); }
+        .c-yellow { color: #fdcb6e; text-shadow: 0 0 10px rgba(253, 203, 110, 0.5); }
+        .c-red { color: #ff7675; text-shadow: 0 0 10px rgba(255, 118, 117, 0.5); }
+        .c-cyan { color: #00cec9; text-shadow: 0 0 10px rgba(0, 206, 201, 0.5); }
+        .c-white { color: #dfe6e9; }
+        .term-label { color: rgba(255, 255, 255, 0.5); font-weight: bold; margin-right: 5px; }
+        .term-value { color: #f5f6fa; flex: 1; }
+        .term-divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent); margin: 6px 0; }
+        .glow-link { color: #74b9ff; text-decoration: none; border-bottom: 1px solid rgba(116, 185, 255, 0.3); transition: all 0.3s ease; }
+        .glow-link:hover { color: #81ecec; border-bottom-color: #81ecec; text-shadow: 0 0 8px rgba(129, 236, 236, 0.8); }
+        .warn-link { color: #ff7675; border-bottom-color: rgba(255, 118, 117, 0.3); }
+        .warn-link:hover { color: #ff4757; border-bottom-color: #ff4757; text-shadow: 0 0 8px rgba(255, 71, 87, 0.8); }
+        .badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-right: 4px; background: rgba(255,255,255,0.1); }
+        .badge.cs { background: rgba(155, 89, 182, 0.2); color: #e056fd; border: 1px solid rgba(155, 89, 182, 0.5); }
+        .badge.ts { background: rgba(41, 128, 185, 0.2); color: #7ed6df; border: 1px solid rgba(41, 128, 185, 0.5); }
+        .buttons-section { width: 100%; display: flex; flex-direction: column; gap: 10px; margin-top: auto; }
+        .social-btn { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; padding: 12px 20px; background-color: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 10px; text-decoration: none; transition: all 0.3s ease; cursor: pointer; position: relative; overflow: hidden; }
+        .social-btn:hover { background-color: rgba(255, 255, 255, 0.12); box-shadow: 0 0 20px rgba(255, 255, 255, 0.2); transform: translateY(-2px); border-color: rgba(255, 255, 255, 0.4); }
+        .social-btn i { font-size: 18px; color: white; transition: transform 0.3s ease; }
+        .social-btn:hover i { transform: scale(1.2); }
+        .social-btn span { font-family: 'VT323', monospace; font-size: 18px; color: white; text-transform: uppercase; letter-spacing: 2px; }
+        .bio-player { background: rgba(0, 0, 0, 0.6); justify-content: center; min-height: 600px; animation: fadeIn 0.7s ease-out 0.2s both; }
+        .bio-player.audio-pulse::before { opacity: 1; animation: pulseBorder 0.5s ease; }
+        @keyframes pulseBorder { 0% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.02); opacity: 1; } 100% { transform: scale(1); opacity: 0.5; } }
+        .bio-player-title { font-size: 14px; letter-spacing: 2px; color: rgba(255, 255, 255, 0.5); margin-bottom: 5px; text-shadow: 0 0 5px rgba(255,255,255,0.3); }
+        .bio-player-track { font-size: 18px; color: white; text-shadow: 0 0 10px rgba(255,255,255,0.7); margin-bottom: 25px; min-height: 45px; display: flex; align-items: center; justify-content: center; transition: text-shadow 0.3s ease; }
+        .bio-player.audio-active .bio-player-track { text-shadow: 0 0 15px rgba(255,255,255,1); }
+        .bio-player-btn { width: 100%; margin-top: 15px; padding: 12px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255,255,255,0.4); color: white; font-size: 18px; cursor: pointer; border-radius: 10px; transition: all 0.3s; font-family: 'VT323', monospace; letter-spacing: 1.5px; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .bio-player-btn:hover { background: rgba(255, 255, 255, 0.25); transform: translateY(-2px); box-shadow: 0 5px 20px rgba(255,255,255,0.3); }
+        .bio-progress { margin-top: 20px; height: 4px; background: rgba(255,255,255,0.15); border-radius: 4px; overflow: hidden; cursor: pointer; width: 100%; }
+        .bio-progress-bar { height: 100%; width: 0%; background: white; transition: width 0.1s linear; }
+        .bio-progress-bar.audio-active { box-shadow: 0 0 10px white; }
+        .bio-time { margin-top: 8px; display: flex; justify-content: space-between; width: 100%; font-size: 13px; color: rgba(255,255,255,0.6); }
+        .player-icon { font-size: 48px; margin: 20px 0; color: rgba(255, 255, 255, 0.9); text-shadow: 0 0 20px rgba(255, 255, 255, 0.7); transition: all 0.3s ease; }
+        .bio-player.audio-active .player-icon { text-shadow: 0 0 30px rgba(255, 255, 255, 1); transform: scale(1.1); }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .parallax-layer { position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.5; background: radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.05) 0%, transparent 50%); }
+        .scanlines { position: fixed; inset: 0; background: linear-gradient(to bottom, rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%); background-size: 100% 4px; z-index: 10; pointer-events: none; opacity: 0.3; }
+    </style>
+</head>
+<body>
+    <div class="parallax-layer"></div>
+    <canvas id="particles-canvas"></canvas>
+    <div class="container">
+        <div class="content-wrapper">
+            <div class="main-content" id="bioCard">
+                <div class="avatar-section">
+                    <a href="https://t.me/puxalwl" target="_blank" class="avatar-link">
+                        <div class="avatar-wrapper">
+                            <img src="https://i.ibb.co/twvVjNTL/208460850.jpg" alt="Avatar" class="avatar" loading="lazy">
+                        </div>
+                    </a>
+                </div>
+                <div class="info-section">
+                    <h1 class="nickname">&lt;/&gt; puxxalwl</h1>
+                    <p class="description">Developer</p>
+                </div>
+                <div class="terminal-box">
+                    <div class="terminal-header">
+                        <div class="term-dot dot-red"></div>
+                        <div class="term-dot dot-yellow"></div>
+                        <div class="term-dot dot-green"></div>
+                        <div class="term-title">~/puxxalwl-bio/info.yml</div>
+                    </div>
+                    <div class="terminal-body">
+                        <div class="term-row">
+                            <i class="fa-solid fa-id-badge term-icon c-blue"></i>
+                            <div class="term-value"><span class="term-label">Name:</span>Ruslan (puxxalwl)</div>
+                        </div>
+                        <div class="term-row">
+                            <i class="fa-brands fa-telegram term-icon c-blue"></i>
+                            <div class="term-value"><span class="term-label">Telegram ID:</span>6984952764 | <a href="https://t.me/puxalwl" target="_blank" class="glow-link">@puxalwl</a></div>
+                        </div>
+                        <div class="term-row">
+                            <i class="fa-solid fa-location-dot term-icon c-red"></i>
+                            <div class="term-value"><span class="term-label">Loc:</span>Germany | 18 y.o (28.06)</div>
+                        </div>
+                        <div class="term-divider"></div>
+                        <div class="term-row">
+                            <i class="fa-solid fa-robot term-icon c-purple"></i>
+                            <div class="term-value"><span class="term-label">Projects:</span><a href="https://t.me/PowerGroupHelperBot" target="_blank" class="glow-link">PowerBot</a></div>
+                        </div>
+                        <div class="term-row">
+                            <i class="fa-solid fa-code term-icon c-green"></i>
+                            <div class="term-value"><span class="term-label">Stack:</span><span class="badge cs">C# (main)</span> <span class="badge ts">TypeScript</span></div>
+                        </div>
+                        <div class="term-row">
+                            <i class="fa-solid fa-language term-icon c-yellow"></i>
+                            <div class="term-value"><span class="term-label">Langs:</span>Russian, German, English</div>
+                        </div>
+                        <div class="term-divider"></div>
+                        <div class="term-row">
+                            <i class="fa-solid fa-life-ring term-icon c-orange"></i>
+                            <div class="term-value"><span class="term-label">Support:</span><a href="https://t.me/dusharobot" target="_blank" class="glow-link">@dusharobot</a></div>
+                        </div>
+                        <div class="term-row">
+                            <i class="fa-solid fa-users term-icon c-cyan"></i>
+                            <div class="term-value"><span class="term-label">Comms:</span><a href="https://t.me/bn_coder" target="_blank" class="glow-link">@bn_coder</a> | <a href="https://t.me/BotTalk" target="_blank" class="glow-link">@BotTalk</a> | <a href="https://t.me/+hKsME4rkiw5jNjli" target="_blank" class="glow-link">GerteChat</a></div>
+                        </div>
+                        <div class="term-divider"></div>
+                        <div class="term-row">
+                            <i class="fa-solid fa-address-book term-icon c-white"></i>
+                            <div class="term-value">
+                                <span class="term-label">Contacts:</span>
+                                <a href="mailto:puxxalwl98@gmail.com" class="glow-link"><i class="fa-solid fa-envelope"></i> Email</a> | 
+                                <a href="https://x.com/puxxalwl" target="_blank" class="glow-link"><i class="fa-brands fa-x-twitter"></i> X</a> | 
+                                <a href="http://tiktok.com/@puxalwl" target="_blank" class="glow-link"><i class="fa-brands fa-tiktok"></i> TikTok</a>
+                            </div>
+                        </div>
+                        <div class="term-row" style="margin-top: 5px;">
+                            <i class="fa-solid fa-triangle-exclamation term-icon c-red"></i>
+                            <div class="term-value"><a href="https://www.nohello.com/" target="_blank" class="glow-link warn-link">nohello.com</a></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="buttons-section">
+                    <a href="https://t.me/Puxxalwl_programming" target="_blank" class="social-btn">
+                        <i class="fab fa-telegram"></i><span>Dev Channel</span>
+                    </a>
+                    <a href="https://github.com/puxxalwl" target="_blank" class="social-btn">
+                        <i class="fab fa-github"></i><span>Github</span>
+                    </a>
+                </div>
+            </div>
+            <div class="bio-player" id="bioPlayer">
+                <div class="player-icon"><i class="fas fa-music"></i></div>
+                <div class="bio-player-title">Now playing</div>
+                <div class="bio-player-track">Dark House</div>
+                <button class="bio-player-btn" id="bioPlayBtn"><i class="fas fa-play"></i> PLAY</button>
+                <div class="bio-progress" id="bioProgress"><div class="bio-progress-bar" id="bioProgressBar"></div></div>
+                <div class="bio-time"><span id="bioCurrent">00:00</span><span id="bioDuration">03:36</span></div>
+            </div>
+        </div>
+    </div>
+    <audio id="bg-music" preload="metadata" loop crossorigin="anonymous"><source src="Juicy_Dark_Horse.mp3" type="audio/mpeg"></audio>
+    <div class="scanlines"></div>
+    <script>
+        const canvas = document.getElementById("particles-canvas");
+        const ctx = canvas.getContext("2d");
+        const parallaxLayer = document.querySelector('.parallax-layer');
+        let w, h, SNOW_COUNT = window.innerWidth > 768 ? 100 : 50;
+        const LINK_DIST_SQ = 120 * 120, MOUSE_DIST_SQ = 140 * 140;
+        let snow = [];
+        const mouse = { x: -1000, y: -1000, targetX: 0, targetY: 0 };
+        let tPX = 0, tPY = 0, cPX = 0, cPY = 0;
+        document.addEventListener('mousemove', (e) => { mouse.targetX = e.clientX; mouse.targetY = e.clientY; tPX = (e.clientX / w) * 20 - 10; tPY = (e.clientY / h) * 20 - 10; });
+        window.addEventListener("mouseleave", () => { mouse.targetX = -1000; mouse.targetY = -1000; });
+        function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; SNOW_COUNT = w > 768 ? 100 : 50; if(snow.length !== SNOW_COUNT) initSnow(); }
+        window.addEventListener("resize", resize);
+        class Snow {
+            constructor() { this.reset(); }
+            reset() { this.x = Math.random() * w; this.y = Math.random() * h; this.r = Math.random() * 2 + 0.8; this.baseSpeed = Math.random() * 0.8 + 0.4; this.sy = this.baseSpeed; this.sx = Math.random() * 0.4 - 0.2; this.a = Math.random() * 0.5 + 0.4; }
+            update(intensity = 0) { this.y += this.sy * (1 + intensity * 0.5); this.x += this.sx; if (this.y > h) { this.y = -10; this.x = Math.random() * w; } }
+            draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2); ctx.fillStyle = `rgba(255,255,255,${this.a})`; ctx.fill(); }
+        }
+        function initSnow() { snow = Array.from({length: SNOW_COUNT}, () => new Snow()); }
+        function drawLinks(intensity = 0) {
+            ctx.globalAlpha = 0.3 + intensity * 0.3; ctx.lineWidth = 0.5;
+            for (let i = 0; i < snow.length; i++) {
+                for (let j = i + 1; j < snow.length; j++) {
+                    const dS = (snow[i].x - snow[j].x)**2 + (snow[i].y - snow[j].y)**2;
+                    if (dS < LINK_DIST_SQ) { ctx.strokeStyle = `rgba(255,255,255,${(1 - Math.sqrt(dS) / 120) * 0.5})`; ctx.beginPath(); ctx.moveTo(snow[i].x, snow[i].y); ctx.lineTo(snow[j].x, snow[j].y); ctx.stroke(); }
+                }
+                const mDS = (snow[i].x - mouse.x)**2 + (snow[i].y - mouse.y)**2;
+                if (mouse.x > 0 && mDS < MOUSE_DIST_SQ) { ctx.strokeStyle = `rgba(255,255,255,${1 - Math.sqrt(mDS) / 140})`; ctx.beginPath(); ctx.moveTo(mouse.x, mouse.y); ctx.lineTo(snow[i].x, snow[i].y); ctx.stroke(); }
+            }
+            ctx.globalAlpha = 1;
+        }
+        let aI = 0;
+        function animate() {
+            ctx.clearRect(0, 0, w, h);
+            mouse.x += (mouse.targetX - mouse.x) * 0.1; mouse.y += (mouse.targetY - mouse.y) * 0.1;
+            cPX += (tPX - cPX) * 0.1; cPY += (tPY - cPY) * 0.1;
+            if (parallaxLayer) parallaxLayer.style.transform = `translate(${cPX}px, ${cPY}px)`;
+            snow.forEach(p => { p.update(aI); p.draw(); });
+            drawLinks(aI); aI *= 0.9; requestAnimationFrame(animate);
+        }
+        resize(); initSnow(); animate();
+        const audio = document.getElementById("bg-music"), playBtn = document.getElementById("bioPlayBtn"), progress = document.getElementById("bioProgress"), bar = document.getElementById("bioProgressBar"), cur = document.getElementById("bioCurrent"), dur = document.getElementById("bioDuration"), player = document.getElementById("bioPlayer");
+        let isPlaying = false, audioContext, analyser, dataArray;
+        function fmt(t) { if (isNaN(t)) return "00:00"; return `${String(Math.floor(t / 60)).padStart(2,"0")}:${String(Math.floor(t % 60)).padStart(2,"0")}`; }
+        audio.addEventListener("timeupdate", () => { if (audio.duration) { bar.style.width = (audio.currentTime / audio.duration) * 100 + "%"; cur.textContent = fmt(audio.currentTime); } });
+        function initAudio() { if (audioContext) return; try { audioContext = new (window.AudioContext || window.webkitAudioContext)(); analyser = audioContext.createAnalyser(); const source = audioContext.createMediaElementSource(audio); source.connect(analyser); analyser.connect(audioContext.destination); dataArray = new Uint8Array(analyser.frequencyBinCount); updateAudio(); } catch (e) {} }
+        function updateAudio() { if (!analyser || !isPlaying) return requestAnimationFrame(updateAudio); analyser.getByteFrequencyData(dataArray); let sum = 0; for(let i=0; i<32; i++) sum += dataArray[i]; aI = sum / (32 * 256); if (aI > 0.2) { player.classList.add('audio-active'); bar.classList.add('audio-active'); } else { player.classList.remove('audio-active'); bar.classList.remove('audio-active'); } requestAnimationFrame(updateAudio); }
+        playBtn.addEventListener("click", () => { if (isPlaying) { audio.pause(); isPlaying = false; playBtn.innerHTML = '<i class="fas fa-play"></i> PLAY'; player.classList.remove('audio-active'); } else { initAudio(); if(audioContext && audioContext.state === 'suspended') audioContext.resume(); audio.play().then(() => { isPlaying = true; playBtn.innerHTML = '<i class="fas fa-pause"></i> PAUSE'; }); } });
+        progress.addEventListener("click", e => { if (audio.duration) audio.currentTime = (e.offsetX / progress.clientWidth) * audio.duration; });
+        audio.addEventListener("loadedmetadata", () => dur.textContent = fmt(audio.duration));
+    </script>
+</body>
+</html>
