@@ -4,11 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>puxalwl bio</title>
+    <meta property="og:title" content="puxalwl bio">
+    <meta property="og:description" content="Developer / C# / TypeScript">
+    <meta property="og:image" content="https://i.ibb.co/twvVjNTL/208460850.jpg">
+    <meta name="twitter:card" content="summary_large_image">
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=VT323&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.4); }
         body { font-family: 'JetBrains Mono', monospace; background-color: #000; color: white; min-height: 100vh; overflow-x: hidden; position: relative; }
         #particles-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
         .container { position: relative; min-height: 100vh; width: 100%; display: flex; align-items: center; justify-content: center; z-index: 20; padding: 20px; }
@@ -29,7 +37,7 @@
         .avatar-link:hover .avatar { transform: rotate(-5deg); }
         .info-section { display: flex; flex-direction: column; gap: 5px; }
         .nickname { font-family: 'VT323', monospace; font-size: 26px; font-weight: bold; text-shadow: 0 0 15px rgba(255, 255, 255, 0.9); letter-spacing: 2px; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .description { font-family: 'VT323', monospace; font-size: 16px; color: rgba(255, 255, 255, 0.6); letter-spacing: 3.2px; text-transform: uppercase; }
+        .description { font-family: 'VT323', monospace; font-size: 16px; color: rgba(255, 255, 255, 0.6); letter-spacing: 3.2px; text-transform: uppercase; min-height: 1.2em; }
         .terminal-box { width: 100%; background: rgba(10, 10, 12, 0.7); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px; overflow: hidden; text-align: left; box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5); margin-top: 10px; }
         .terminal-header { background: rgba(255, 255, 255, 0.05); padding: 8px 15px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
         .term-dot { width: 12px; height: 12px; border-radius: 50%; }
@@ -50,10 +58,14 @@
         .c-white { color: #dfe6e9; }
         .term-label { color: rgba(255, 255, 255, 0.5); font-weight: bold; margin-right: 5px; }
         .term-value { color: #f5f6fa; flex: 1; }
+        .copyable { cursor: pointer; position: relative; transition: color 0.2s; }
+        .copyable:hover { color: #fff; }
+        .copy-hint { position: fixed; background: rgba(255,255,255,0.9); color: #000; padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; pointer-events: none; opacity: 0; transition: opacity 0.3s, transform 0.3s; z-index: 1000; }
         .term-divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent); margin: 6px 0; }
         .glow-link { color: #74b9ff; text-decoration: none; border-bottom: 1px solid rgba(116, 185, 255, 0.3); transition: all 0.3s ease; }
         .glow-link:hover { color: #81ecec; border-bottom-color: #81ecec; text-shadow: 0 0 8px rgba(129, 236, 236, 0.8); }
-        .warn-link { color: #ff7675; border-bottom-color: rgba(255, 118, 117, 0.3); }
+        .warn-link { color: #ff7675; border-bottom-color: rgba(255, 118, 117, 0.3); animation: pulseWarn 2s infinite; }
+        @keyframes pulseWarn { 0% { text-shadow: 0 0 0px rgba(255,118,117,0); } 50% { text-shadow: 0 0 10px rgba(255,118,117,0.5); } 100% { text-shadow: 0 0 0px rgba(255,118,117,0); } }
         .warn-link:hover { color: #ff4757; border-bottom-color: #ff4757; text-shadow: 0 0 8px rgba(255, 71, 87, 0.8); }
         .badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-right: 4px; background: rgba(255,255,255,0.1); }
         .badge.cs { background: rgba(155, 89, 182, 0.2); color: #e056fd; border: 1px solid rgba(155, 89, 182, 0.5); }
@@ -81,24 +93,32 @@
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
         .parallax-layer { position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.5; background: radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.05) 0%, transparent 50%); }
         .scanlines { position: fixed; inset: 0; background: linear-gradient(to bottom, rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%); background-size: 100% 4px; z-index: 10; pointer-events: none; opacity: 0.3; }
+        #game-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000; display: none; flex-direction: column; align-items: center; justify-content: center; font-family: 'VT323', monospace; }
+        .game-cat { font-size: 40px; position: absolute; cursor: pointer; transition: transform 0.1s; user-select: none; }
     </style>
 </head>
 <body>
+    <div id="game-overlay">
+        <h2 style="margin-bottom: 20px;">CATCH THE CAT! (Score: <span id="game-score">0</span>)</h2>
+        <p>Catch 10 cats to exit</p>
+        <div id="game-area" style="width: 100%; height: 70%; position: relative;"></div>
+    </div>
+    <div id="copy-notif" class="copy-hint">COPIED!</div>
     <div class="parallax-layer"></div>
     <canvas id="particles-canvas"></canvas>
     <div class="container">
         <div class="content-wrapper">
             <div class="main-content" id="bioCard">
                 <div class="avatar-section">
-                    <a href="https://t.me/puxalwl" target="_blank" class="avatar-link">
+                    <div class="avatar-link" id="avatarClicker">
                         <div class="avatar-wrapper">
                             <img src="https://i.ibb.co/twvVjNTL/208460850.jpg" alt="Avatar" class="avatar" loading="lazy">
                         </div>
-                    </a>
+                    </div>
                 </div>
                 <div class="info-section">
                     <h1 class="nickname">&lt;/&gt; puxxalwl</h1>
-                    <p class="description">Developer</p>
+                    <p class="description" id="typing-text"></p>
                 </div>
                 <div class="terminal-box">
                     <div class="terminal-header">
@@ -114,7 +134,7 @@
                         </div>
                         <div class="term-row">
                             <i class="fa-brands fa-telegram term-icon c-blue"></i>
-                            <div class="term-value"><span class="term-label">Telegram ID:</span>6984952764 | <a href="https://t.me/puxalwl" target="_blank" class="glow-link">@puxalwl</a></div>
+                            <div class="term-value"><span class="term-label">Telegram ID:</span><span class="copyable" onclick="copyId('6984952764', event)">6984952764</span> | <a href="https://t.me/puxalwl" target="_blank" class="glow-link">@puxalwl</a></div>
                         </div>
                         <div class="term-row">
                             <i class="fa-solid fa-location-dot term-icon c-red"></i>
@@ -184,11 +204,18 @@
         const ctx = canvas.getContext("2d");
         const parallaxLayer = document.querySelector('.parallax-layer');
         let w, h, SNOW_COUNT = window.innerWidth > 768 ? 100 : 50;
-        const LINK_DIST_SQ = 120 * 120, MOUSE_DIST_SQ = 140 * 140;
+        const LINK_DIST_SQ = 130 * 130, MOUSE_DIST_SQ = 160 * 160;
         let snow = [];
-        const mouse = { x: -1000, y: -1000, targetX: 0, targetY: 0 };
+        const mouse = { x: -1000, y: -1000, targetX: -1000, targetY: -1000 };
         let tPX = 0, tPY = 0, cPX = 0, cPY = 0;
-        document.addEventListener('mousemove', (e) => { mouse.targetX = e.clientX; mouse.targetY = e.clientY; tPX = (e.clientX / w) * 20 - 10; tPY = (e.clientY / h) * 20 - 10; });
+        const handleMove = (e) => {
+            const x = e.touches ? e.touches[0].clientX : e.clientX;
+            const y = e.touches ? e.touches[0].clientY : e.clientY;
+            mouse.targetX = x; mouse.targetY = y;
+            tPX = (x / w) * 20 - 10; tPY = (y / h) * 20 - 10;
+        };
+        document.addEventListener('mousemove', handleMove);
+        document.addEventListener('touchmove', handleMove, {passive: false});
         window.addEventListener("mouseleave", () => { mouse.targetX = -1000; mouse.targetY = -1000; });
         function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; SNOW_COUNT = w > 768 ? 100 : 50; if(snow.length !== SNOW_COUNT) initSnow(); }
         window.addEventListener("resize", resize);
@@ -200,27 +227,56 @@
         }
         function initSnow() { snow = Array.from({length: SNOW_COUNT}, () => new Snow()); }
         function drawLinks(intensity = 0) {
-            ctx.globalAlpha = 0.3 + intensity * 0.3; ctx.lineWidth = 0.5;
+            ctx.globalAlpha = 0.3 + intensity * 0.3; ctx.lineWidth = 0.6;
             for (let i = 0; i < snow.length; i++) {
                 for (let j = i + 1; j < snow.length; j++) {
                     const dS = (snow[i].x - snow[j].x)**2 + (snow[i].y - snow[j].y)**2;
-                    if (dS < LINK_DIST_SQ) { ctx.strokeStyle = `rgba(255,255,255,${(1 - Math.sqrt(dS) / 120) * 0.5})`; ctx.beginPath(); ctx.moveTo(snow[i].x, snow[i].y); ctx.lineTo(snow[j].x, snow[j].y); ctx.stroke(); }
+                    if (dS < LINK_DIST_SQ) { ctx.strokeStyle = `rgba(255,255,255,${(1 - Math.sqrt(dS) / 130) * 0.5})`; ctx.beginPath(); ctx.moveTo(snow[i].x, snow[i].y); ctx.lineTo(snow[j].x, snow[j].y); ctx.stroke(); }
                 }
                 const mDS = (snow[i].x - mouse.x)**2 + (snow[i].y - mouse.y)**2;
-                if (mouse.x > 0 && mDS < MOUSE_DIST_SQ) { ctx.strokeStyle = `rgba(255,255,255,${1 - Math.sqrt(mDS) / 140})`; ctx.beginPath(); ctx.moveTo(mouse.x, mouse.y); ctx.lineTo(snow[i].x, snow[i].y); ctx.stroke(); }
+                if (mouse.x > 0 && mDS < MOUSE_DIST_SQ) { ctx.strokeStyle = `rgba(255,255,255,${1 - Math.sqrt(mDS) / 160})`; ctx.beginPath(); ctx.moveTo(mouse.x, mouse.y); ctx.lineTo(snow[i].x, snow[i].y); ctx.stroke(); }
             }
             ctx.globalAlpha = 1;
         }
         let aI = 0;
         function animate() {
             ctx.clearRect(0, 0, w, h);
-            mouse.x += (mouse.targetX - mouse.x) * 0.1; mouse.y += (mouse.targetY - mouse.y) * 0.1;
-            cPX += (tPX - cPX) * 0.1; cPY += (tPY - cPY) * 0.1;
+            mouse.x += (mouse.targetX - mouse.x) * 0.25; mouse.y += (mouse.targetY - mouse.y) * 0.25;
+            cPX += (tPX - cPX) * 0.15; cPY += (tPY - cPY) * 0.15;
             if (parallaxLayer) parallaxLayer.style.transform = `translate(${cPX}px, ${cPY}px)`;
             snow.forEach(p => { p.update(aI); p.draw(); });
-            drawLinks(aI); aI *= 0.9; requestAnimationFrame(animate);
+            drawLinks(aI); aI *= 0.92; requestAnimationFrame(animate);
         }
         resize(); initSnow(); animate();
+        const text = "Developer"; const typing = document.getElementById("typing-text"); let idx = 0;
+        function typeText() { if (idx < text.length) { typing.textContent += text.charAt(idx); idx++; setTimeout(typeText, 150); } }
+        setTimeout(typeText, 1000);
+        function copyId(val, e) {
+            navigator.clipboard.writeText(val);
+            const notif = document.getElementById("copy-notif");
+            notif.style.left = e.clientX + "px"; notif.style.top = (e.clientY - 30) + "px";
+            notif.style.opacity = "1"; notif.style.transform = "translateY(-10px)";
+            setTimeout(() => { notif.style.opacity = "0"; notif.style.transform = "translateY(0)"; }, 1500);
+        }
+        let avatarClicks = 0; const avatarBtn = document.getElementById("avatarClicker");
+        avatarBtn.addEventListener("click", () => {
+            avatarClicks++;
+            if(avatarClicks >= 5) { avatarClicks = 0; startGame(); }
+            setTimeout(() => { if(avatarClicks > 0) avatarClicks--; }, 3000);
+        });
+        function startGame() {
+            const overlay = document.getElementById("game-overlay"); overlay.style.display = "flex";
+            const area = document.getElementById("game-area"); const scoreEl = document.getElementById("game-score");
+            let score = 0; scoreEl.textContent = score;
+            function spawn() {
+                if (score >= 10) { overlay.style.display = "none"; return; }
+                const cat = document.createElement("div"); cat.className = "game-cat"; cat.textContent = "🐈";
+                cat.style.left = Math.random() * 80 + 10 + "%"; cat.style.top = Math.random() * 80 + 10 + "%";
+                cat.onclick = () => { score++; scoreEl.textContent = score; area.removeChild(cat); spawn(); };
+                area.appendChild(cat);
+            }
+            spawn();
+        }
         const audio = document.getElementById("bg-music"), playBtn = document.getElementById("bioPlayBtn"), progress = document.getElementById("bioProgress"), bar = document.getElementById("bioProgressBar"), cur = document.getElementById("bioCurrent"), dur = document.getElementById("bioDuration"), player = document.getElementById("bioPlayer");
         let isPlaying = false, audioContext, analyser, dataArray;
         function fmt(t) { if (isNaN(t)) return "00:00"; return `${String(Math.floor(t / 60)).padStart(2,"0")}:${String(Math.floor(t % 60)).padStart(2,"0")}`; }
