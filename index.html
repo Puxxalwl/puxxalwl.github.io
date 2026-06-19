@@ -199,6 +199,69 @@
     </div>
     <audio id="bg-music" preload="metadata" loop crossorigin="anonymous"><source src="Juicy_Dark_Horse.mp3" type="audio/mpeg"></audio>
     <div class="scanlines"></div>
+    <style>
+        .views-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 50;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 20px;
+            transition: all 0.3s ease;
+        }
+        .views-widget:hover {
+            color: #00b894;
+            text-shadow: 0 0 15px rgba(0, 184, 148, 0.8);
+        }
+        .views-popup {
+            position: absolute;
+            bottom: 120%;
+            right: 0;
+            background: rgba(10, 10, 12, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: #dfe6e9;
+            white-space: nowrap;
+            opacity: 0;
+            transform: translateY(10px) scale(0.95);
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+        }
+        .views-widget:hover .views-popup {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        .views-popup::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            right: 10px;
+            width: 10px;
+            height: 10px;
+            background: rgba(10, 10, 12, 0.95);
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            transform: rotate(45deg);
+        }
+        .views-count-num {
+            color: #00b894;
+            font-weight: bold;
+            text-shadow: 0 0 8px rgba(0, 184, 148, 0.5);
+        }
+    </style>
+    <div class="views-widget" id="viewsWidget">
+        <div class="views-popup">
+            Views: <span class="views-count-num" id="viewCount">...</span>
+        </div>
+        <i class="fa-solid fa-eye"></i>
+    </div>
+
     <script>
         const canvas = document.getElementById("particles-canvas");
         const ctx = canvas.getContext("2d");
@@ -287,7 +350,25 @@
         progress.addEventListener("click", e => { if (audio.duration) audio.currentTime = (e.offsetX / progress.clientWidth) * audio.duration; });
         audio.addEventListener("loadedmetadata", () => dur.textContent = fmt(audio.duration));
     </script>
-    <script data-goatcounter="https://puxxalwl.goatcounter.com/count"
-        async src="//gc.zgo.at/count.js"></script>
+    <script>
+        function fetchViewCount() {
+            fetch('https://puxalwl.goatcounter.com/counter/%2F.json')
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                })
+                .then(data => {
+                    document.getElementById('viewCount').innerText = data.count;
+                })
+                .catch(error => {
+                    console.error('Erorr:', error);
+                    document.getElementById('viewCount').innerText = 'err';
+                });
+        }
+        fetchViewCount();
+    </script>
+    <script data-goatcounter="https://puxalwl.goatcounter.com/count"
+            async src="//gc.zgo.at/count.js"></script>
+
 </body>
 </html>
