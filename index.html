@@ -153,6 +153,10 @@
                             <i class="fa-solid fa-language term-icon c-yellow"></i>
                             <div class="term-value"><span class="term-label">Langs:</span>Russian, German, English</div>
                         </div>
+                        <div class="term-row">
+                            <i class="fa-solid fa-book term-icon c-purple"></i>
+                            <div class="term-value"><span class="term-label">Fav Book:</span><a href="https://en.wikipedia.org/wiki/Mushoku_Tensei" target="_blank" class="glow-link">Mushoku Tensei</a></div>
+                        </div>
                         <div class="term-divider"></div>
                         <div class="term-row">
                             <i class="fa-solid fa-life-ring term-icon c-orange"></i>
@@ -185,6 +189,9 @@
                     <a href="https://github.com/puxxalwl" target="_blank" class="social-btn">
                         <i class="fab fa-github"></i><span>Github</span>
                     </a>
+                    <a href="https://github.com/Power-Helper-Git" target="_blank" class="social-btn">
+                        <i class="fab fa-github"></i><span>Power Github</span>
+                    </a>
                 </div>
             </div>
             <div class="bio-player" id="bioPlayer">
@@ -196,8 +203,7 @@
                 <div class="bio-time"><span id="bioCurrent">00:00</span><span id="bioDuration">03:36</span></div>
             </div>
         </div>
-    </div>
-    <audio id="bg-music" preload="metadata" loop crossorigin="anonymous"><source src="Juicy_Dark_Horse.mp3" type="audio/mpeg"></audio>
+    </div><audio id="bg-music" preload="metadata" loop crossorigin="anonymous"><source src="Juicy_Dark_Horse.mp3" type="audio/mpeg"></audio>
     <div class="scanlines"></div>
     <style>
         .views-widget {
@@ -267,6 +273,7 @@
         const ctx = canvas.getContext("2d");
         const parallaxLayer = document.querySelector('.parallax-layer');
         let w, h, SNOW_COUNT = window.innerWidth > 768 ? 100 : 50;
+
         const LINK_DIST_SQ = 130 * 130, MOUSE_DIST_SQ = 160 * 160;
         let snow = [];
         const mouse = { x: -1000, y: -1000, targetX: -1000, targetY: -1000 };
