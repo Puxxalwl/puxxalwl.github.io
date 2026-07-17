@@ -1,0 +1,9 @@
+{
+  "default": "Juicy_Dark_Horse.mp3",
+  "tracks": [
+    { "file": "Juicy_Dark_Horse.mp3", "title": "Dark House" },
+    { "file": "Let_The_World_Burn.mp4", "title": "LET THE WORLD BURN" },
+    { "file": "Ya_soshla_s_uma.mp4", "title": "T.a.t.u — Я сошла с ума" },
+    { "file": "Dracula.mp4", "title": "Dracula" }
+  ]
+}
