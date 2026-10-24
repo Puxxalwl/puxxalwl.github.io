@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#f6f4ed"/>
+  <path d="M89 117V81m0 7c4-11 22-11 22 4s-18 15-22 5" fill="none" stroke="#486044" stroke-width="4" stroke-linecap="square"/>
+  <text x="1120" y="100" text-anchor="end" font-family="Arial, sans-serif" font-size="20" fill="#666b61">puxxalwl.github.io</text>
+  <path d="M80 150H1120" stroke="#d7d9ce"/>
+  <text x="75" y="347" font-family="Palatino, 'Times New Roman', serif" font-size="154" letter-spacing="-6" fill="#292d29">puxxalwl</text>
+  <text x="84" y="414" font-family="Arial, sans-serif" font-size="30" fill="#486044">Независимый разработчик</text>
+  <text x="84" y="546" font-family="Arial, sans-serif" font-size="22" fill="#666b61">Stille Messenger · Volt.NET</text>
+</svg>
