@@ -7,14 +7,18 @@
     <meta name="theme-color" content="#f6f4ed">
     <title>puxxalwl — независимый разработчик</title>
     <meta name="description" content="Я Руслан, независимый разработчик. Работаю над Stille Messenger и Volt.NET, интересуюсь системами и сетями.">
-    <link rel="canonical" href="https://puxxalwl.github.io/">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Руслан (puxxalwl)">
+    <link rel="canonical" href="https://puxxalwl.site/">
+    <link rel="sitemap" type="application/xml" href="https://puxxalwl.site/sitemap.xml">
     <meta property="og:type" content="website">
     <meta property="og:title" content="puxxalwl — независимый разработчик">
     <meta property="og:description" content="Я Руслан, независимый разработчик. Работаю над Stille Messenger и Volt.NET, интересуюсь системами и сетями.">
-    <meta property="og:url" content="https://puxxalwl.github.io/">
+    <meta property="og:url" content="https://puxxalwl.site/">
+    <meta property="og:site_name" content="puxxalwl">
     <meta property="og:locale" content="ru_RU">
     <meta property="og:locale:alternate" content="en_US">
-    <meta property="og:image" content="https://puxxalwl.github.io/og.png">
+    <meta property="og:image" content="https://puxxalwl.site/og.png">
     <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -22,10 +26,30 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="puxxalwl — независимый разработчик">
     <meta name="twitter:description" content="Я Руслан, независимый разработчик. Работаю над Stille Messenger и Volt.NET, интересуюсь системами и сетями.">
-    <meta name="twitter:image" content="https://puxxalwl.github.io/og.png">
+    <meta name="twitter:image" content="https://puxxalwl.site/og.png">
     <meta name="twitter:image:alt" content="puxxalwl — независимый разработчик. Stille Messenger · Volt.NET.">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="stylesheet" href="styles.css">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "ProfilePage",
+        "name": "puxxalwl — независимый разработчик",
+        "url": "https://puxxalwl.site/",
+        "inLanguage": ["ru", "en"],
+        "mainEntity": {
+            "@type": "Person",
+            "name": "Руслан",
+            "alternateName": "puxxalwl",
+            "url": "https://puxxalwl.site/",
+            "sameAs": [
+                "https://github.com/Puxxalwl",
+                "https://t.me/puxalwl"
+            ],
+            "knowsAbout": ["systems programming", "networking", "open source software"]
+        }
+    }
+    </script>
     <script src="js/main.js"></script>
 </head>
 <body>
@@ -63,7 +87,7 @@
                 <div class="margin-note"><h2 id="work-heading"><span data-lang="ru">Избранные проекты</span><span data-lang="en">Selected work</span></h2></div>
                 <div class="section-body">
                     <article class="project" id="stille" aria-labelledby="stille-heading">
-                        <div class="project-heading"><span class="project-number" aria-hidden="true">01</span><h3 id="stille-heading"><a href="https://github.com/Puxxalwl/stille-messenger-core">Stille Messenger <span aria-hidden="true">↗</span></a></h3></div>
+                        <div class="project-heading"><span class="project-number" aria-hidden="true">01</span><h3 id="stille-heading"><a href="https://stille.im/">Stille Messenger <span aria-hidden="true">↗</span></a></h3></div>
                         <p data-lang="ru">В Stille мы пробуем сделать переписку независимой от центрального сервиса: устройства обмениваются сообщениями между собой, а история хранится у собеседников. Я работаю над ядром на Zig и Android-клиентом.</p>
                         <p data-lang="en">With Stille, we're working on messaging that doesn't depend on a central service. Devices exchange messages peer to peer and keep their own history. I work on the Zig core and the Android client.</p>
                         <p class="project-detail" data-lang="ru">Соединение может быть прямым или проходить через собственный ретранслятор — это зависит от сети.</p>
@@ -71,10 +95,10 @@
                         <div class="project-bottom"><p class="project-tools">Zig / Kotlin</p><div class="project-links"><a href="https://github.com/Puxxalwl/stille-messenger-core"><span data-lang="ru">Ядро</span><span data-lang="en">Core</span> <span aria-hidden="true">↗</span></a><a href="https://github.com/Puxxalwl/Stille-Messenger-Android">Android <span aria-hidden="true">↗</span></a></div></div>
                     </article>
                     <article class="project" aria-labelledby="volt-heading">
-                        <div class="project-heading"><span class="project-number" aria-hidden="true">02</span><h3 id="volt-heading"><a href="https://github.com/Puxxalwl/Volt.NET">Volt.NET <span aria-hidden="true">↗</span></a></h3></div>
+                        <div class="project-heading"><span class="project-number" aria-hidden="true">02</span><h3 id="volt-heading"><a href="https://puxxalwl.site/Volt.NET/">Volt.NET <span aria-hidden="true">↗</span></a></h3></div>
                         <p data-lang="ru">Веб-фреймворк для сайтов на C#. Страницы можно собирать заранее или на сервере при запросе, а интерактивные элементы добавлять там, где они нужны.</p>
                         <p data-lang="en">A framework for building websites in C#. Pages can be generated ahead of time or rendered on the server, with interactive components added where they're needed.</p>
-                        <div class="project-bottom"><p class="project-tools">C# / .NET</p><div class="project-links"><a href="https://github.com/Puxxalwl/Volt.NET"><span data-lang="ru">Исходный код</span><span data-lang="en">Source</span> <span aria-hidden="true">↗</span></a></div></div>
+                        <div class="project-bottom"><p class="project-tools">C# / .NET</p><div class="project-links"><a href="https://github.com/Puxxalwl/Volt.NET"><span data-lang="ru">Исходный код</span><span data-lang="en">Source</span> <span aria-hidden="true">↗</span></a><a href="https://puxxalwl.site/Volt.NET/"><span data-lang="ru">Сайт</span><span data-lang="en">Website</span> <span aria-hidden="true">↗</span></a></div></div>
                     </article>
                     <a class="text-link" href="https://github.com/Puxxalwl?tab=repositories"><span data-lang="ru">Остальные репозитории на GitHub</span><span data-lang="en">More on GitHub</span><span aria-hidden="true">↗</span></a>
                 </div>
